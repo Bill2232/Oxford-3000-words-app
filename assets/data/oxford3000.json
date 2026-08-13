@@ -1,0 +1,182 @@
+[
+  {
+    "headword": "able",
+    "partOfSpeech": "adjective",
+    "cefrLevel": "A1",
+    "definition": "having the skill, means, or opportunity to do something",
+    "exampleSentence": "She was able to finish the race.",
+    "phoneticSpelling": "/ˈeɪbl/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "about",
+    "partOfSpeech": "preposition",
+    "cefrLevel": "A1",
+    "definition": "on the subject of; concerning",
+    "exampleSentence": "We talked about the weather.",
+    "phoneticSpelling": "/əˈbaʊt/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "accept",
+    "partOfSpeech": "verb",
+    "cefrLevel": "A2",
+    "definition": "to agree to take something that is offered",
+    "exampleSentence": "He accepted the job offer.",
+    "phoneticSpelling": "/əkˈsept/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "achieve",
+    "partOfSpeech": "verb",
+    "cefrLevel": "B1",
+    "definition": "to successfully complete something or gain a desired result",
+    "exampleSentence": "It took years to achieve her goal.",
+    "phoneticSpelling": "/əˈtʃiːv/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "acquire",
+    "partOfSpeech": "verb",
+    "cefrLevel": "B2",
+    "definition": "to gain something, often through effort or over time",
+    "exampleSentence": "He acquired fluency in French after two years abroad.",
+    "phoneticSpelling": "/əˈkwaɪər/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "beautiful",
+    "partOfSpeech": "adjective",
+    "cefrLevel": "A1",
+    "definition": "pleasing to look at; attractive",
+    "exampleSentence": "The sunset was beautiful.",
+    "phoneticSpelling": "/ˈbjuːtɪfl/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "believe",
+    "partOfSpeech": "verb",
+    "cefrLevel": "A1",
+    "definition": "to accept that something is true",
+    "exampleSentence": "I believe you are right.",
+    "phoneticSpelling": "/bɪˈliːv/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "benefit",
+    "partOfSpeech": "noun",
+    "cefrLevel": "B1",
+    "definition": "an advantage or profit gained from something",
+    "exampleSentence": "There are many benefits to regular exercise.",
+    "phoneticSpelling": "/ˈbenɪfɪt/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "career",
+    "partOfSpeech": "noun",
+    "cefrLevel": "A2",
+    "definition": "an occupation pursued for a significant period of a person's life",
+    "exampleSentence": "She built a successful career in medicine.",
+    "phoneticSpelling": "/kəˈrɪər/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "consider",
+    "partOfSpeech": "verb",
+    "cefrLevel": "B1",
+    "definition": "to think carefully about something",
+    "exampleSentence": "Please consider all the options before deciding.",
+    "phoneticSpelling": "/kənˈsɪdər/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "definite",
+    "partOfSpeech": "adjective",
+    "cefrLevel": "B2",
+    "definition": "clearly stated or decided; not vague",
+    "exampleSentence": "We need a definite answer by Friday.",
+    "phoneticSpelling": "/ˈdefɪnət/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "environment",
+    "partOfSpeech": "noun",
+    "cefrLevel": "A2",
+    "definition": "the natural world, or the surroundings in which something exists",
+    "exampleSentence": "We must protect the environment.",
+    "phoneticSpelling": "/ɪnˈvaɪrənmənt/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "familiar",
+    "partOfSpeech": "adjective",
+    "cefrLevel": "B1",
+    "definition": "well known to you; easily recognized",
+    "exampleSentence": "The song sounded familiar.",
+    "phoneticSpelling": "/fəˈmɪliər/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "generous",
+    "partOfSpeech": "adjective",
+    "cefrLevel": "B1",
+    "definition": "willing to give more of something than is necessary",
+    "exampleSentence": "He was very generous with his time.",
+    "phoneticSpelling": "/ˈdʒenərəs/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "happy",
+    "partOfSpeech": "adjective",
+    "cefrLevel": "A1",
+    "definition": "feeling or showing pleasure or contentment",
+    "exampleSentence": "She felt happy about the good news.",
+    "phoneticSpelling": "/ˈhæpi/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "immediate",
+    "partOfSpeech": "adjective",
+    "cefrLevel": "B2",
+    "definition": "happening or done at once, without delay",
+    "exampleSentence": "The situation requires immediate action.",
+    "phoneticSpelling": "/ɪˈmiːdiət/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "journey",
+    "partOfSpeech": "noun",
+    "cefrLevel": "A2",
+    "definition": "an act of traveling from one place to another",
+    "exampleSentence": "The journey took three hours by train.",
+    "phoneticSpelling": "/ˈdʒɜːni/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "knowledge",
+    "partOfSpeech": "noun",
+    "cefrLevel": "A2",
+    "definition": "facts, information, and skills acquired through experience or education",
+    "exampleSentence": "He has a deep knowledge of history.",
+    "phoneticSpelling": "/ˈnɒlɪdʒ/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "likely",
+    "partOfSpeech": "adjective",
+    "cefrLevel": "A2",
+    "definition": "probable; expected to happen",
+    "exampleSentence": "It is likely to rain tomorrow.",
+    "phoneticSpelling": "/ˈlaɪkli/",
+    "tags": ["core"]
+  },
+  {
+    "headword": "manage",
+    "partOfSpeech": "verb",
+    "cefrLevel": "A2",
+    "definition": "to succeed in doing something, often something difficult",
+    "exampleSentence": "She managed to finish the project on time.",
+    "phoneticSpelling": "/ˈmænɪdʒ/",
+    "tags": ["core"]
+  }
+]
