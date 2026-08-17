@@ -160,8 +160,7 @@ class _PracticeContent extends StatelessWidget {
                           onReveal: onReveal,
                           onNext: onNext,
                           onExplain: () => context.push(
-                            AppRoutes.explanation,
-                            extra: state.word,
+                            AppRoutes.wordDetailPath(state.word.id),
                           ),
                         ),
                       ),

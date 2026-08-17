@@ -20,4 +20,6 @@ class ProgressLocalDataSource {
           progress,
         );
   }
+
+  Future<void> deleteAll() => _db.delete(_db.userWordProgressTable).go();
 }

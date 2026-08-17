@@ -27,4 +27,6 @@ class WordLocalDataSource {
   Future<void> insertAll(List<WordsCompanion> words) {
     return _db.batch((batch) => batch.insertAll(_db.words, words));
   }
+
+  Future<void> deleteAll() => _db.delete(_db.words).go();
 }

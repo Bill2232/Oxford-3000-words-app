@@ -6,6 +6,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:oxford_3000_app/app.dart';
 import 'package:oxford_3000_app/data/local/database/app_database.dart';
+import 'package:oxford_3000_app/data/local/datasources/word_local_datasource.dart';
+import 'package:oxford_3000_app/data/local/database/mappers.dart';
+import 'package:oxford_3000_app/domain/entities/word.dart';
+import 'package:oxford_3000_app/domain/enums/cefr_level.dart';
+import 'package:oxford_3000_app/domain/enums/part_of_speech.dart';
 import 'package:oxford_3000_app/providers/database_provider.dart';
 
 void main() {
@@ -16,8 +21,28 @@ void main() {
   // their own.
   late AppDatabase testDb;
 
-  setUpAll(() {
+  setUpAll(() async {
     testDb = AppDatabase.forTesting(NativeDatabase.memory());
+    // A small fixed word set inserted directly, rather than running the
+    // real Oxford3000SeedLoader against the full ~3000-word bundled asset:
+    // these tests only exercise navigation/UI wiring and never assert on
+    // specific headwords, so production-scale data just adds cost here
+    // (and repeatedly hammering the NativeDatabase FFI isolate with a
+    // large batch insert plus every subsequent widget test's queries was
+    // intermittently timing out `pumpAndSettle` in this environment).
+    await WordLocalDataSource(testDb).insertAll(
+      List.generate(20, (i) {
+        return Word(
+          id: 0,
+          headword: 'testword$i',
+          partOfSpeech: PartOfSpeech.noun,
+          cefrLevel: CefrLevel.a1,
+          definition: 'A test definition for word $i.',
+          exampleSentence: 'This is test word $i in a sentence.',
+          tags: const ['core'],
+        ).toCompanion();
+      }),
+    );
   });
 
   tearDownAll(() => testDb.close());
@@ -28,7 +53,13 @@ void main() {
 
   ProviderScope testApp() {
     return ProviderScope(
-      overrides: [appDatabaseProvider.overrideWithValue(testDb)],
+      overrides: [
+        appDatabaseProvider.overrideWithValue(testDb),
+        // The words are already seeded above; skip the real sync (which
+        // would otherwise see this count against the full bundled asset,
+        // decide it's a mismatch, and wipe/reseed with production data).
+        seedProvider.overrideWith((ref) async {}),
+      ],
       child: const WordlyApp(),
     );
   }
@@ -86,8 +117,8 @@ void main() {
   });
 
   testWidgets(
-      'Explain word opens a dedicated screen and a failed AI call shows an '
-      'error with retry, without breaking practice underneath', (tester) async {
+      'Explain word opens the word detail screen with its definition and '
+      'example, without breaking practice underneath', (tester) async {
     await tester.pumpWidget(testApp());
     await tester.pumpAndSettle();
     await tester.tap(find.text('Start Practice'));
@@ -96,19 +127,9 @@ void main() {
     await tester.tap(find.text('Explain word'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Explain this word'), findsOneWidget);
-    // No ANTHROPIC_API_KEY is configured in the test environment, so the
-    // AI section must fail gracefully — not crash, not hang.
-    expect(find.text('Retry'), findsOneWidget);
-    expect(
-      find.text('AI explanation feature is coming soon...'),
-      findsOneWidget,
-    );
-
-    // Retry re-runs the same (still-failing) call rather than getting stuck.
-    await tester.tap(find.text('Retry'));
-    await tester.pumpAndSettle();
-    expect(find.text('Retry'), findsOneWidget);
+    expect(find.text('Word detail'), findsOneWidget);
+    expect(find.text('Definition'), findsOneWidget);
+    expect(find.text('Example'), findsOneWidget);
 
     // Backing out returns to a fully functional practice screen.
     await tester.pageBack();

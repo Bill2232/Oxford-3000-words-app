@@ -33,10 +33,14 @@ final progressRepositoryProvider = Provider<ProgressRepository>((ref) {
   return ProgressRepositoryImpl(ref.watch(progressLocalDataSourceProvider));
 });
 
-/// Seeds the local DB from the bundled Oxford 3000 subset on first run.
+/// Seeds (or re-syncs) the local DB from the bundled Oxford 3000 asset.
 /// Screens await this (e.g. via `ref.watch(seedProvider)`) before reading
-/// word data so the list is never empty on a fresh install.
+/// word data so the list is never empty on a fresh install and never stale
+/// after the bundled word list grows.
 final seedProvider = FutureProvider<void>((ref) async {
-  final loader = Oxford3000SeedLoader(ref.watch(wordLocalDataSourceProvider));
-  await loader.seedIfEmpty();
+  final loader = Oxford3000SeedLoader(
+    ref.watch(wordLocalDataSourceProvider),
+    ref.watch(progressLocalDataSourceProvider),
+  );
+  await loader.sync();
 });

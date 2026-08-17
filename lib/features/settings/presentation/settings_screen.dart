@@ -34,6 +34,13 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => context.push(AppRoutes.statistics),
           ),
           ListTile(
+            leading: const Icon(Icons.record_voice_over_outlined),
+            title: const Text('Pronunciation'),
+            subtitle: const Text('British or American accent'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(AppRoutes.pronunciationSelector),
+          ),
+          ListTile(
             leading: Container(
               width: 32,
               height: 32,

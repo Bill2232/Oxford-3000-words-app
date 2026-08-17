@@ -19,7 +19,6 @@ dependencies:
   path: ^1.9.1
   shared_preferences: ^2.3.5
   flutter_tts: ^4.2.0
-  http: ^1.2.2
   freezed_annotation: ^2.4.4
 
 dev_dependencies:
@@ -34,3 +33,11 @@ flutter:
   uses-material-design: true
   assets:
     - assets/data/
+
+dependency_overrides:
+  # Pinned to 2.4.0 because its cached copy in PUB_CACHE has been locally
+  # patched (StringListObjectInputStream inlined as a nested Java class) to
+  # work around this machine's AGP failing to put the module's Kotlin compile
+  # output on javac's classpath (flutter/flutter#162044). The patch lives only
+  # in PUB_CACHE, not in this repo — re-apply if the pub cache is ever reset.
+  shared_preferences_android: 2.4.0
