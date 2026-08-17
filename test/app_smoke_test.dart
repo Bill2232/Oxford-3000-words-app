@@ -60,11 +60,11 @@ void main() {
         // decide it's a mismatch, and wipe/reseed with production data).
         seedProvider.overrideWith((ref) async {}),
       ],
-      child: const WordlyApp(),
+      child: const LexoraApp(),
     );
   }
 
-  testWidgets('WordlyApp boots and shows the home screen', (tester) async {
+  testWidgets('LexoraApp boots and shows the home screen', (tester) async {
     await tester.pumpWidget(testApp());
     await tester.pumpAndSettle();
 

@@ -1,11 +1,11 @@
 {
-    "name": "oxford_3000_app",
-    "short_name": "oxford_3000_app",
+    "name": "Lexora",
+    "short_name": "Lexora",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Practice the Oxford 3000 word list with spelling drills, pronunciation, and progress tracking.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -4,7 +4,7 @@ project(oxford_3000_app LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
-set(BINARY_NAME "oxford_3000_app")
+set(BINARY_NAME "Lexora")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.

@@ -35,6 +35,9 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
+# Installer output (windows/installer/lexora.iss) — built on demand, not
+# tracked; distributed via GitHub Releases instead.
+/dist/
 
 # Symbolication related
 app.*.symbols

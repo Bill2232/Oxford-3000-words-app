@@ -7,8 +7,8 @@ import 'core/theme/app_motion.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_controller.dart';
 
-class WordlyApp extends ConsumerWidget {
-  const WordlyApp({super.key});
+class LexoraApp extends ConsumerWidget {
+  const LexoraApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

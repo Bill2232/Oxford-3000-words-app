@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.wordly" "\0"
-            VALUE "FileDescription", "oxford_3000_app" "\0"
+            VALUE "FileDescription", "Lexora" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "oxford_3000_app" "\0"
+            VALUE "InternalName", "Lexora" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.wordly. All rights reserved." "\0"
-            VALUE "OriginalFilename", "oxford_3000_app.exe" "\0"
-            VALUE "ProductName", "oxford_3000_app" "\0"
+            VALUE "OriginalFilename", "Lexora.exe" "\0"
+            VALUE "ProductName", "Lexora" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
