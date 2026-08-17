@@ -7,6 +7,7 @@ import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/loading_indicator.dart';
 import '../../../core/widgets/responsive_center.dart';
+import '../../../core/widgets/word_pronounce_button.dart';
 import '../../../domain/entities/word.dart';
 import '../../../providers/database_provider.dart';
 
@@ -68,7 +69,17 @@ class _WordDetailContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(word.headword, style: theme.textTheme.displayLarge),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      word.headword,
+                      style: theme.textTheme.displayLarge,
+                    ),
+                  ),
+                  WordPronounceButton(headword: word.headword, size: 44),
+                ],
+              ),
               if (word.phoneticSpelling != null)
                 Padding(
                   padding: const EdgeInsets.only(top: AppSpacing.xs),

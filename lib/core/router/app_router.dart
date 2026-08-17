@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/answer_field_selector/presentation/answer_field_selector_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/practice/presentation/practice_screen.dart';
 import '../../features/pronunciation_selector/presentation/pronunciation_selector_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/sound_effects_settings/presentation/sound_effects_settings_screen.dart';
 import '../../features/statistics/presentation/statistics_screen.dart';
 import '../../features/theme_selector/presentation/theme_selector_screen.dart';
 import '../../features/word_detail/presentation/word_detail_screen.dart';
@@ -25,6 +27,8 @@ abstract final class AppRoutes {
   static const settings = '/settings';
   static const themeSelector = '/settings/theme';
   static const pronunciationSelector = '/settings/pronunciation';
+  static const soundEffectsSettings = '/settings/sound-effects';
+  static const answerFieldStyle = '/settings/answer-field';
 
   static String wordDetailPath(int id) => '/words/$id';
 }
@@ -105,6 +109,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => buildAppPage(
           state: state,
           child: const PronunciationSelectorScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.soundEffectsSettings,
+        name: 'soundEffectsSettings',
+        pageBuilder: (context, state) => buildAppPage(
+          state: state,
+          child: const SoundEffectsSettingsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.answerFieldStyle,
+        name: 'answerFieldStyle',
+        pageBuilder: (context, state) => buildAppPage(
+          state: state,
+          child: const AnswerFieldSelectorScreen(),
         ),
       ),
     ],

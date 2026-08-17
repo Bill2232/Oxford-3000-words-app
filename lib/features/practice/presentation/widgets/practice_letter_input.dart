@@ -109,33 +109,57 @@ class _BoxesRow extends AnimatedWidget {
         fillColor = theme.colorScheme.surfaceContainerHigh;
     }
 
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 8,
-      runSpacing: 8,
-      children: List.generate(length, (i) {
-        final char = i < text.length ? text[i].toUpperCase() : '';
-        final isCursor = i == text.length && result == CheckResult.none;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Shrink box size (and spacing) as the word gets longer so it stays
+        // on one row wherever possible — a long word wrapping to a second
+        // row is exactly what can push the Check button below the keyboard
+        // on a phone screen.
+        const maxBoxWidth = 40.0;
+        const minBoxWidth = 24.0;
+        const maxSpacing = 8.0;
+        const minSpacing = 3.0;
 
-        return AnimatedContainer(
-          duration: AppMotion.fast,
-          width: 40,
-          height: 48,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: fillColor,
-            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-            border: Border.all(
-              color: isCursor ? theme.colorScheme.primary : borderColor,
-              width: isCursor ? 2 : 1.5,
-            ),
-          ),
-          child: Text(
-            char,
-            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
-          ),
+        final fitWidth = length == 0
+            ? maxBoxWidth
+            : (constraints.maxWidth - (length - 1) * minSpacing) / length;
+        final boxWidth = fitWidth.clamp(minBoxWidth, maxBoxWidth);
+        final spacing = boxWidth < maxBoxWidth ? minSpacing : maxSpacing;
+        final boxHeight = boxWidth < 32 ? boxWidth * 1.25 : 48.0;
+        final fontSize = (boxWidth * 0.5).clamp(14.0, 22.0);
+
+        return Wrap(
+          alignment: WrapAlignment.center,
+          spacing: spacing,
+          runSpacing: 8,
+          children: List.generate(length, (i) {
+            final char = i < text.length ? text[i].toUpperCase() : '';
+            final isCursor = i == text.length && result == CheckResult.none;
+
+            return AnimatedContainer(
+              duration: AppMotion.fast,
+              width: boxWidth,
+              height: boxHeight,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: fillColor,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                border: Border.all(
+                  color: isCursor ? theme.colorScheme.primary : borderColor,
+                  width: isCursor ? 2 : 1.5,
+                ),
+              ),
+              child: Text(
+                char,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  fontSize: fontSize,
+                ),
+              ),
+            );
+          }),
         );
-      }),
+      },
     );
   }
 }

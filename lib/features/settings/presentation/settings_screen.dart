@@ -41,6 +41,20 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => context.push(AppRoutes.pronunciationSelector),
           ),
           ListTile(
+            leading: const Icon(Icons.music_note_outlined),
+            title: const Text('Sound effects'),
+            subtitle: const Text('Enable, disable, or adjust volume'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(AppRoutes.soundEffectsSettings),
+          ),
+          ListTile(
+            leading: const Icon(Icons.text_fields_outlined),
+            title: const Text('Answer field style'),
+            subtitle: const Text('Letter boxes or a plain text field'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(AppRoutes.answerFieldStyle),
+          ),
+          ListTile(
             leading: Container(
               width: 32,
               height: 32,

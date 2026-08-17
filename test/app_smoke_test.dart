@@ -100,13 +100,17 @@ void main() {
 
     expect(find.text('Not quite — try again'), findsOneWidget);
     expect(find.text('Reveal answer'), findsOneWidget);
-    expect(find.text('Explain word'), findsOneWidget);
+    // Not shown yet — the spelling isn't revealed, so this would just be a
+    // way to see the answer without a wrong/incomplete attempt counting.
+    expect(find.text('Explain word'), findsNothing);
 
     await tester.tap(find.text('Reveal answer'));
     await tester.pumpAndSettle();
 
     expect(find.text('The word was'), findsOneWidget);
     expect(find.text('Continue'), findsOneWidget);
+    // Now shown — the word is already revealed, so nothing left to give away.
+    expect(find.text('Explain word'), findsOneWidget);
 
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
@@ -124,6 +128,15 @@ void main() {
     await tester.tap(find.text('Start Practice'));
     await tester.pumpAndSettle();
 
+    // Explain word only appears once the word is no longer hideable behind
+    // it — attempt and reveal the answer first, same as a user would have
+    // to.
+    await tester.enterText(find.byType(TextField), 'zzqxvv');
+    await tester.tap(find.text('Check'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Reveal answer'));
+    await tester.pumpAndSettle();
+
     await tester.tap(find.text('Explain word'));
     await tester.pumpAndSettle();
 
@@ -131,11 +144,12 @@ void main() {
     expect(find.text('Definition'), findsOneWidget);
     expect(find.text('Example'), findsOneWidget);
 
-    // Backing out returns to a fully functional practice screen.
+    // Backing out returns to a fully functional practice screen, still in
+    // its revealed state from before.
     await tester.pageBack();
     await tester.pumpAndSettle();
     expect(find.text('Practice'), findsOneWidget);
-    expect(find.text('Check'), findsOneWidget);
+    expect(find.text('Continue'), findsOneWidget);
   });
 
   testWidgets(

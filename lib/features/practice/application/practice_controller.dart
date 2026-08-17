@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/services/sound_effects_service.dart';
 import '../../../core/services/tts_service.dart';
 import '../../../domain/entities/user_word_progress.dart';
 import '../../../domain/entities/word.dart';
@@ -77,6 +78,9 @@ class PracticeController extends AsyncNotifier<PracticeState> {
         attemptsThisWord: current.attemptsThisWord + 1,
       ),
     );
+    ref
+        .read(soundEffectsServiceProvider)
+        .play(isCorrect ? SoundEffect.correct : SoundEffect.incorrect);
 
     await _recordAttemptSafely(current.word, isCorrect: isCorrect);
 
@@ -173,9 +177,25 @@ class PracticeController extends AsyncNotifier<PracticeState> {
       lastReviewedAt: now,
     );
 
+    // Read today's progress *before* this attempt is saved so the daily-goal
+    // sound can fire exactly on the crossing, not on every attempt after.
+    final statsBefore = await ref.read(userStatsProvider.future);
+
     await progressRepo.saveProgress(updated);
     ref.invalidate(userStatsProvider);
     ref.invalidate(vocabularyProgressProvider);
+
+    final soundEffects = ref.read(soundEffectsServiceProvider);
+    if (newMasteryLevel == MasteryLevel.mastered &&
+        base.masteryLevel != MasteryLevel.mastered) {
+      soundEffects.play(SoundEffect.wordMastered);
+    }
+
+    final statsAfter = await ref.read(userStatsProvider.future);
+    if (statsBefore.todayPracticedCount < statsAfter.dailyGoal &&
+        statsAfter.todayPracticedCount >= statsAfter.dailyGoal) {
+      soundEffects.play(SoundEffect.dailyGoalReached);
+    }
   }
 }
 

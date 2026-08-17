@@ -20,6 +20,7 @@ dependencies:
   shared_preferences: ^2.3.5
   flutter_tts: ^4.2.0
   freezed_annotation: ^2.4.4
+  audioplayers: ^6.7.1
 
 dev_dependencies:
   flutter_test:
@@ -33,6 +34,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/data/
+    - assets/sounds/
 
 dependency_overrides:
   # Pinned to 2.4.0 because its cached copy in PUB_CACHE has been locally
