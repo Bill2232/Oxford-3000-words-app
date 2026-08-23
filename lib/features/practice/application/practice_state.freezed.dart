@@ -22,6 +22,7 @@ mixin _$PracticeState {
   bool get isRevealed => throw _privateConstructorUsedError;
   int get attemptsThisWord => throw _privateConstructorUsedError;
   int get wordsCompletedThisSession => throw _privateConstructorUsedError;
+  bool get justMarkedMastered => throw _privateConstructorUsedError;
 
   /// Create a copy of PracticeState
   /// with the given fields replaced by the non-null parameter values.
@@ -43,6 +44,7 @@ abstract class $PracticeStateCopyWith<$Res> {
     bool isRevealed,
     int attemptsThisWord,
     int wordsCompletedThisSession,
+    bool justMarkedMastered,
   });
 
   $WordCopyWith<$Res> get word;
@@ -68,6 +70,7 @@ class _$PracticeStateCopyWithImpl<$Res, $Val extends PracticeState>
     Object? isRevealed = null,
     Object? attemptsThisWord = null,
     Object? wordsCompletedThisSession = null,
+    Object? justMarkedMastered = null,
   }) {
     return _then(
       _value.copyWith(
@@ -91,6 +94,10 @@ class _$PracticeStateCopyWithImpl<$Res, $Val extends PracticeState>
                 ? _value.wordsCompletedThisSession
                 : wordsCompletedThisSession // ignore: cast_nullable_to_non_nullable
                       as int,
+            justMarkedMastered: null == justMarkedMastered
+                ? _value.justMarkedMastered
+                : justMarkedMastered // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -122,6 +129,7 @@ abstract class _$$PracticeStateImplCopyWith<$Res>
     bool isRevealed,
     int attemptsThisWord,
     int wordsCompletedThisSession,
+    bool justMarkedMastered,
   });
 
   @override
@@ -147,6 +155,7 @@ class __$$PracticeStateImplCopyWithImpl<$Res>
     Object? isRevealed = null,
     Object? attemptsThisWord = null,
     Object? wordsCompletedThisSession = null,
+    Object? justMarkedMastered = null,
   }) {
     return _then(
       _$PracticeStateImpl(
@@ -170,6 +179,10 @@ class __$$PracticeStateImplCopyWithImpl<$Res>
             ? _value.wordsCompletedThisSession
             : wordsCompletedThisSession // ignore: cast_nullable_to_non_nullable
                   as int,
+        justMarkedMastered: null == justMarkedMastered
+            ? _value.justMarkedMastered
+            : justMarkedMastered // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -184,6 +197,7 @@ class _$PracticeStateImpl implements _PracticeState {
     this.isRevealed = false,
     this.attemptsThisWord = 0,
     this.wordsCompletedThisSession = 0,
+    this.justMarkedMastered = false,
   });
 
   @override
@@ -200,10 +214,13 @@ class _$PracticeStateImpl implements _PracticeState {
   @override
   @JsonKey()
   final int wordsCompletedThisSession;
+  @override
+  @JsonKey()
+  final bool justMarkedMastered;
 
   @override
   String toString() {
-    return 'PracticeState(word: $word, result: $result, isRevealed: $isRevealed, attemptsThisWord: $attemptsThisWord, wordsCompletedThisSession: $wordsCompletedThisSession)';
+    return 'PracticeState(word: $word, result: $result, isRevealed: $isRevealed, attemptsThisWord: $attemptsThisWord, wordsCompletedThisSession: $wordsCompletedThisSession, justMarkedMastered: $justMarkedMastered)';
   }
 
   @override
@@ -221,7 +238,9 @@ class _$PracticeStateImpl implements _PracticeState {
                   other.wordsCompletedThisSession,
                   wordsCompletedThisSession,
                 ) ||
-                other.wordsCompletedThisSession == wordsCompletedThisSession));
+                other.wordsCompletedThisSession == wordsCompletedThisSession) &&
+            (identical(other.justMarkedMastered, justMarkedMastered) ||
+                other.justMarkedMastered == justMarkedMastered));
   }
 
   @override
@@ -232,6 +251,7 @@ class _$PracticeStateImpl implements _PracticeState {
     isRevealed,
     attemptsThisWord,
     wordsCompletedThisSession,
+    justMarkedMastered,
   );
 
   /// Create a copy of PracticeState
@@ -250,6 +270,7 @@ abstract class _PracticeState implements PracticeState {
     final bool isRevealed,
     final int attemptsThisWord,
     final int wordsCompletedThisSession,
+    final bool justMarkedMastered,
   }) = _$PracticeStateImpl;
 
   @override
@@ -262,6 +283,8 @@ abstract class _PracticeState implements PracticeState {
   int get attemptsThisWord;
   @override
   int get wordsCompletedThisSession;
+  @override
+  bool get justMarkedMastered;
 
   /// Create a copy of PracticeState
   /// with the given fields replaced by the non-null parameter values.

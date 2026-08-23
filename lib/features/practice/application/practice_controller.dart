@@ -5,20 +5,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/services/sound_effects_service.dart';
 import '../../../core/services/tts_service.dart';
+import '../../../data/local/preferences/mark_as_mastered_preferences.dart';
 import '../../../domain/entities/user_word_progress.dart';
 import '../../../domain/entities/word.dart';
 import '../../../domain/enums/mastery_level.dart';
 import '../../../domain/services/mastery_progression.dart';
 import '../../../providers/database_provider.dart';
+import '../../../providers/mastered_progress_provider.dart';
 import '../../../providers/user_stats_provider.dart';
 import '../../../providers/vocabulary_progress_provider.dart';
 import 'check_result.dart';
 import 'practice_state.dart';
 
+final markAsMasteredPreferencesProvider =
+    Provider((ref) => MarkAsMasteredPreferences());
+
 /// Drives a single practice session: picks a random word, plays its
 /// pronunciation, checks typed answers, and records each attempt against
 /// the real progress table. No spaced repetition — word order is just
-/// "don't repeat the immediately previous word".
+/// "don't repeat the immediately previous word". Words the user has
+/// explicitly marked as mastered are excluded from the pool entirely —
+/// see the "Mastered Words" feature, which reviews them separately.
 class PracticeController extends AsyncNotifier<PracticeState> {
   final _random = Random();
   List<Word> _pool = [];
@@ -26,13 +33,31 @@ class PracticeController extends AsyncNotifier<PracticeState> {
   @override
   Future<PracticeState> build() async {
     await ref.watch(seedProvider.future);
-    _pool = await ref.watch(wordRepositoryProvider).getAllWords();
+    final allWords = await ref.watch(wordRepositoryProvider).getAllWords();
+    final allProgress = await ref.watch(progressRepositoryProvider).getAllProgress();
+    final masteredIds = {
+      for (final p in allProgress)
+        if (p.userMastered) p.wordId,
+    };
+    _pool = allWords.where((w) => !masteredIds.contains(w.id)).toList();
 
     if (_pool.isEmpty) {
-      throw StateError('No vocabulary words are available to practice yet.');
+      throw StateError(
+        allWords.isEmpty
+            ? 'No vocabulary words are available to practice yet.'
+            : "You've mastered every word! Review them from Mastered Words, "
+                'or un-mark one to practice it again.',
+      );
     }
 
     return PracticeState(word: _pickRandomWord(exclude: null));
+  }
+
+  /// Removes a word from the in-memory pool immediately (e.g. right after
+  /// marking it mastered) so it can't be picked again for the rest of this
+  /// session without waiting for the provider to rebuild.
+  void excludeFromPool(int wordId) {
+    _pool.removeWhere((w) => w.id == wordId);
   }
 
   Word _pickRandomWord({required Word? exclude}) {
@@ -114,6 +139,56 @@ class PracticeController extends AsyncNotifier<PracticeState> {
     );
   }
 
+  /// Marks the current word as user-mastered: pulls it out of this (and
+  /// every future) normal practice session and into "Mastered Words". A
+  /// no-op if it's already mastered (shouldn't be reachable in practice,
+  /// since a mastered word can't appear in this pool in the first place —
+  /// guarded anyway so this is safe to call defensively).
+  Future<void> markCurrentWordAsMastered() async {
+    final current = state.valueOrNull;
+    if (current == null) return;
+
+    final progressRepo = ref.read(progressRepositoryProvider);
+    final now = DateTime.now();
+    final existing = await progressRepo.getProgressForWord(current.word.id);
+    if (existing?.userMastered ?? false) return;
+
+    final updated = (existing ?? newUserWordProgress(current.word.id, now))
+        .copyWith(userMastered: true, masteredAt: now);
+    await progressRepo.saveProgress(updated);
+
+    excludeFromPool(current.word.id);
+    state = AsyncData(current.copyWith(justMarkedMastered: true));
+
+    ref.invalidate(userStatsProvider);
+    ref.invalidate(vocabularyProgressProvider);
+    ref.invalidate(masteredProgressProvider);
+  }
+
+  /// Undoes [markCurrentWordAsMastered] — for reversing an accidental tap.
+  /// A no-op if the word isn't currently mastered.
+  Future<void> unmarkCurrentWordAsMastered() async {
+    final current = state.valueOrNull;
+    if (current == null) return;
+
+    final progressRepo = ref.read(progressRepositoryProvider);
+    final existing = await progressRepo.getProgressForWord(current.word.id);
+    if (!(existing?.userMastered ?? false)) return;
+
+    await progressRepo.saveProgress(
+      existing!.copyWith(userMastered: false, masteredAt: null),
+    );
+
+    if (!_pool.any((w) => w.id == current.word.id)) {
+      _pool.add(current.word);
+    }
+    state = AsyncData(current.copyWith(justMarkedMastered: false));
+
+    ref.invalidate(userStatsProvider);
+    ref.invalidate(vocabularyProgressProvider);
+    ref.invalidate(masteredProgressProvider);
+  }
+
   /// Wraps [_recordAttempt] so a persistence failure (disk full, DB
   /// locked, etc.) is logged and swallowed rather than left unhandled —
   /// progress tracking is secondary to the practice loop itself, and by
@@ -143,19 +218,7 @@ class PracticeController extends AsyncNotifier<PracticeState> {
     final existing = await progressRepo.getProgressForWord(word.id);
     final isVeryFirstAttempt = existing == null;
 
-    final base = existing ??
-        UserWordProgress(
-          wordId: word.id,
-          timesReviewed: 0,
-          timesCorrect: 0,
-          timesIncorrect: 0,
-          firstAttemptSuccesses: 0,
-          revealCount: 0,
-          hintCount: 0,
-          masteryScore: 0,
-          masteryLevel: MasteryLevel.newWord,
-          createdAt: now,
-        );
+    final base = existing ?? newUserWordProgress(word.id, now);
 
     final newTimesCorrect = base.timesCorrect + (isCorrect ? 1 : 0);
     final newMasteryLevel = isCorrect

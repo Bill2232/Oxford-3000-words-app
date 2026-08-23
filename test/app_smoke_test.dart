@@ -32,9 +32,12 @@ void main() {
     // intermittently timing out `pumpAndSettle` in this environment).
     await WordLocalDataSource(testDb).insertAll(
       List.generate(20, (i) {
+        // Letters only (no digit suffix) — the app's answer fields strip
+        // non-letters, so a digit-suffixed headword could never be typed
+        // back in correctly.
         return Word(
           id: 0,
-          headword: 'testword$i',
+          headword: 'testword${String.fromCharCode(97 + i)}',
           partOfSpeech: PartOfSpeech.noun,
           cefrLevel: CefrLevel.a1,
           definition: 'A test definition for word $i.',
@@ -180,5 +183,98 @@ void main() {
     expect(find.text('Progress by CEFR level'), findsOneWidget);
     expect(find.text('Weak Words'), findsOneWidget);
     expect(find.textContaining('No practice yet'), findsNothing);
+  });
+
+  testWidgets(
+      'Mark as Mastered removes a word from practice and lets it be '
+      'reviewed to completion', (tester) async {
+    await tester.pumpWidget(testApp());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Start Practice'));
+    await tester.pumpAndSettle();
+
+    // Reveal to learn the headword — the letter-box field never shows it,
+    // and "Mark as Mastered" is available on the revealed banner too.
+    await tester.enterText(find.byType(TextField), 'zzqxvv');
+    await tester.tap(find.text('Check'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Reveal answer'));
+    await tester.pumpAndSettle();
+
+    final headwordFinder = find.byWidgetPredicate(
+      (widget) => widget is Text && RegExp(r'^testword[a-z]$').hasMatch(widget.data ?? ''),
+    );
+    expect(headwordFinder, findsOneWidget);
+    final headword = tester.widget<Text>(headwordFinder).data!;
+
+    await tester.tap(find.text('Mark as Mastered'));
+    await tester.pumpAndSettle();
+    expect(find.text('Mark as mastered?'), findsOneWidget);
+
+    await tester.tap(find.text('Mark as mastered'));
+    await tester.pumpAndSettle();
+    expect(find.text('Mastered'), findsOneWidget);
+    expect(find.text('Mark as Mastered'), findsNothing);
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Mastered Words'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('1 word mastered'), findsOneWidget);
+    expect(find.text(headword), findsOneWidget);
+
+    await tester.tap(find.text('Review'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Reviewing Mastered Words'), findsOneWidget);
+    expect(find.text('1 / 1'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField), headword);
+    await tester.tap(find.text('Check'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Correct!'), findsOneWidget);
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Mastered Review Complete'), findsOneWidget);
+    expect(find.text('1 word reviewed'), findsOneWidget);
+
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Mastered Words'), findsOneWidget);
+  });
+
+  testWidgets(
+      'Tapping the Mastered indicator again undoes an accidental Mark as '
+      'Mastered', (tester) async {
+    await tester.pumpWidget(testApp());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Start Practice'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'zzqxvv');
+    await tester.tap(find.text('Check'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Reveal answer'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Mark as Mastered'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Mark as mastered'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Mastered'), findsOneWidget);
+    expect(find.text('Mark as Mastered'), findsNothing);
+
+    // Tapping the now-mastered indicator undoes it, no confirmation needed.
+    await tester.tap(find.text('Mastered'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Mark as Mastered'), findsOneWidget);
+    expect(find.text('Mastered'), findsNothing);
   });
 }

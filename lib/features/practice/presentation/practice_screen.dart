@@ -7,9 +7,9 @@ import 'package:go_router/go_router.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_motion.dart';
 import '../../../core/theme/app_semantic_colors.dart';
-import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/widgets/app_button.dart';
+import '../../../core/widgets/app_confirm_dialog.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/app_shake.dart';
 import '../../../core/widgets/empty_state.dart';
@@ -23,6 +23,7 @@ import '../application/practice_state.dart';
 import 'widgets/accent_quick_switch.dart';
 import 'widgets/practice_letter_input.dart';
 import 'widgets/practice_plain_text_field.dart';
+import 'widgets/practice_play_button.dart';
 
 /// How long a newly-shown word waits before it's automatically spoken —
 /// long enough that it doesn't feel like it's talking over the word
@@ -133,6 +134,36 @@ class _PracticeScreenState extends ConsumerState<PracticeScreen> {
     _focusNode.requestFocus();
   }
 
+  Future<void> _markAsMastered() async {
+    final prefs = ref.read(markAsMasteredPreferencesProvider);
+    final skipConfirmation = await prefs.getSkipConfirmation();
+
+    if (!skipConfirmation) {
+      if (!mounted) return;
+      final result = await showAppConfirmDialog(
+        context,
+        title: 'Mark as mastered?',
+        message: 'This word will be removed from normal practice and added '
+            'to your Mastered Words.',
+        confirmLabel: 'Mark as mastered',
+        checkboxLabel: "Don't ask me again",
+      );
+      if (!result.confirmed) return;
+      if (result.dontShowAgain) {
+        await prefs.setSkipConfirmation(true);
+      }
+    }
+
+    if (!mounted) return;
+    await ref.read(practiceControllerProvider.notifier).markCurrentWordAsMastered();
+  }
+
+  // Reverses an accidental "Mark as Mastered" tap — no confirmation, since
+  // that would defeat the point of a quick undo.
+  Future<void> _unmarkAsMastered() async {
+    await ref.read(practiceControllerProvider.notifier).unmarkCurrentWordAsMastered();
+  }
+
   @override
   Widget build(BuildContext context) {
     final stateAsync = ref.watch(practiceControllerProvider);
@@ -162,6 +193,10 @@ class _PracticeScreenState extends ConsumerState<PracticeScreen> {
           onReveal: _reveal,
           onNext: _next,
           onLetterChanged: _onLetterChanged,
+          onPlayAudio: () =>
+              ref.read(practiceControllerProvider.notifier).playAudio(),
+          onMarkMastered: _markAsMastered,
+          onUnmarkMastered: _unmarkAsMastered,
         ),
       ),
     );
@@ -180,6 +215,9 @@ class _PracticeContent extends StatelessWidget {
     required this.onReveal,
     required this.onNext,
     required this.onLetterChanged,
+    required this.onPlayAudio,
+    required this.onMarkMastered,
+    required this.onUnmarkMastered,
   });
 
   final PracticeState state;
@@ -192,6 +230,9 @@ class _PracticeContent extends StatelessWidget {
   final VoidCallback onReveal;
   final VoidCallback onNext;
   final ValueChanged<String> onLetterChanged;
+  final VoidCallback onPlayAudio;
+  final VoidCallback onMarkMastered;
+  final VoidCallback onUnmarkMastered;
 
   bool get _isDone =>
       state.result == CheckResult.correct || state.isRevealed;
@@ -238,10 +279,7 @@ class _PracticeContent extends StatelessWidget {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      _PlayButton(
-                                        wordId: state.word.id,
-                                        size: 56,
-                                      ),
+                                      PlayButton(onPlay: onPlayAudio, size: 56),
                                       const SizedBox(width: AppSpacing.md),
                                       const AccentQuickSwitch(),
                                     ],
@@ -256,7 +294,7 @@ class _PracticeContent extends StatelessWidget {
                                       style: theme.textTheme.bodyMedium,
                                     ),
                                     const SizedBox(height: AppSpacing.xl),
-                                    _PlayButton(wordId: state.word.id),
+                                    PlayButton(onPlay: onPlayAudio),
                                     const SizedBox(height: AppSpacing.md),
                                     const AccentQuickSwitch(),
                                   ],
@@ -298,6 +336,8 @@ class _PracticeContent extends StatelessWidget {
                           onExplain: () => context.push(
                             AppRoutes.wordDetailPath(state.word.id),
                           ),
+                          onMarkMastered: onMarkMastered,
+                          onUnmarkMastered: onUnmarkMastered,
                         ),
                       ),
                       // Keeps the feedback area reachable by scroll even in
@@ -322,64 +362,6 @@ class _PracticeContent extends StatelessWidget {
   }
 }
 
-class _PlayButton extends ConsumerStatefulWidget {
-  const _PlayButton({required this.wordId, this.size = 96});
-
-  final int wordId;
-  final double size;
-
-  @override
-  ConsumerState<_PlayButton> createState() => _PlayButtonState();
-}
-
-class _PlayButtonState extends ConsumerState<_PlayButton> {
-  bool _pressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
-    return Tooltip(
-      message: 'Play pronunciation',
-      child: Semantics(
-        button: true,
-        label: 'Play pronunciation',
-        child: GestureDetector(
-          onTapDown: (_) => setState(() => _pressed = true),
-          onTapUp: (_) => setState(() => _pressed = false),
-          onTapCancel: () => setState(() => _pressed = false),
-          onTap: () => ref.read(practiceControllerProvider.notifier).playAudio(),
-          child: AnimatedScale(
-            scale: _pressed ? 0.94 : 1,
-            duration: AppMotion.fast,
-            curve: AppMotion.standard,
-            child: AnimatedContainer(
-              duration: AppMotion.medium,
-              curve: AppMotion.standard,
-              width: widget.size,
-              height: widget.size,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [scheme.primary, scheme.secondary],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                shape: BoxShape.circle,
-                boxShadow: AppShadows.glow(scheme.primary),
-              ),
-              child: Icon(
-                Icons.volume_up_rounded,
-                color: Colors.white,
-                size: widget.size * 0.42,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _FeedbackArea extends StatelessWidget {
   const _FeedbackArea({
     required this.state,
@@ -387,6 +369,8 @@ class _FeedbackArea extends StatelessWidget {
     required this.onReveal,
     required this.onNext,
     required this.onExplain,
+    required this.onMarkMastered,
+    required this.onUnmarkMastered,
   });
 
   final PracticeState state;
@@ -394,6 +378,8 @@ class _FeedbackArea extends StatelessWidget {
   final VoidCallback onReveal;
   final VoidCallback onNext;
   final VoidCallback onExplain;
+  final VoidCallback onMarkMastered;
+  final VoidCallback onUnmarkMastered;
 
   @override
   Widget build(BuildContext context) {
@@ -407,6 +393,9 @@ class _FeedbackArea extends StatelessWidget {
           word: state.word,
           onNext: onNext,
           onExplain: onExplain,
+          isMastered: state.justMarkedMastered,
+          onMarkMastered: onMarkMastered,
+          onUnmarkMastered: onUnmarkMastered,
         );
       case CheckResult.incorrect:
         if (state.isRevealed) {
@@ -418,6 +407,9 @@ class _FeedbackArea extends StatelessWidget {
             word: state.word,
             onNext: onNext,
             onExplain: onExplain,
+            isMastered: state.justMarkedMastered,
+            onMarkMastered: onMarkMastered,
+            onUnmarkMastered: onUnmarkMastered,
           );
         }
         return Column(
@@ -480,6 +472,9 @@ class _ResultBanner extends StatelessWidget {
     required this.word,
     required this.onNext,
     required this.onExplain,
+    required this.isMastered,
+    required this.onMarkMastered,
+    required this.onUnmarkMastered,
     super.key,
   });
 
@@ -489,6 +484,9 @@ class _ResultBanner extends StatelessWidget {
   final Word word;
   final VoidCallback onNext;
   final VoidCallback onExplain;
+  final bool isMastered;
+  final VoidCallback onMarkMastered;
+  final VoidCallback onUnmarkMastered;
 
   @override
   Widget build(BuildContext context) {
@@ -525,6 +523,24 @@ class _ResultBanner extends StatelessWidget {
           variant: AppButtonVariant.text,
           onPressed: onExplain,
         ),
+        const SizedBox(height: AppSpacing.sm),
+        if (isMastered)
+          Tooltip(
+            message: 'Tap to remove from Mastered Words',
+            child: AppButton(
+              label: 'Mastered',
+              icon: Icons.star_rounded,
+              variant: AppButtonVariant.filled,
+              onPressed: onUnmarkMastered,
+            ),
+          )
+        else
+          AppButton(
+            label: 'Mark as Mastered',
+            icon: Icons.star_outline_rounded,
+            variant: AppButtonVariant.outlined,
+            onPressed: onMarkMastered,
+          ),
       ],
     );
   }

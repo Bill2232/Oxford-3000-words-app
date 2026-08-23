@@ -17,5 +17,6 @@ class PracticeState with _$PracticeState {
     @Default(false) bool isRevealed,
     @Default(0) int attemptsThisWord,
     @Default(0) int wordsCompletedThisSession,
+    @Default(false) bool justMarkedMastered,
   }) = _PracticeState;
 }

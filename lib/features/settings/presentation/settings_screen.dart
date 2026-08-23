@@ -34,6 +34,13 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => context.push(AppRoutes.statistics),
           ),
           ListTile(
+            leading: const Icon(Icons.grade_outlined),
+            title: const Text('Mastered Words'),
+            subtitle: const Text("Words you've marked as mastered"),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(AppRoutes.masteredWords),
+          ),
+          ListTile(
             leading: const Icon(Icons.record_voice_over_outlined),
             title: const Text('Pronunciation'),
             subtitle: const Text('British or American accent'),

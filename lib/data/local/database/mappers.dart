@@ -59,6 +59,12 @@ extension UserWordProgressRowMapper on UserWordProgressTableData {
       createdAt: createdAt,
       lastReviewedAt: lastReviewedAt,
       nextReviewAt: nextReviewAt,
+      userMastered: userMastered,
+      masteredAt: masteredAt,
+      lastMasteredReviewAt: lastMasteredReviewAt,
+      masteredReviewCount: masteredReviewCount,
+      masteredReviewSuccessCount: masteredReviewSuccessCount,
+      masteredReviewFailCount: masteredReviewFailCount,
     );
   }
 }
@@ -78,6 +84,12 @@ extension UserWordProgressCompanionMapper on UserWordProgress {
       createdAt: Value(createdAt),
       lastReviewedAt: Value(lastReviewedAt),
       nextReviewAt: Value(nextReviewAt),
+      userMastered: Value(userMastered),
+      masteredAt: Value(masteredAt),
+      lastMasteredReviewAt: Value(lastMasteredReviewAt),
+      masteredReviewCount: Value(masteredReviewCount),
+      masteredReviewSuccessCount: Value(masteredReviewSuccessCount),
+      masteredReviewFailCount: Value(masteredReviewFailCount),
     );
   }
 }

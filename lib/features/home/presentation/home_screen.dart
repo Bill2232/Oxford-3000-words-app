@@ -34,6 +34,11 @@ class HomeScreen extends ConsumerWidget {
           onPressed: () => context.push(AppRoutes.statistics),
         ),
         IconButton(
+          icon: const Icon(Icons.grade_outlined),
+          tooltip: 'Mastered Words',
+          onPressed: () => context.push(AppRoutes.masteredWords),
+        ),
+        IconButton(
           icon: const Icon(Icons.settings_outlined),
           tooltip: 'Settings',
           onPressed: () => context.push(AppRoutes.settings),

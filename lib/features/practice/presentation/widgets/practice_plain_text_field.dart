@@ -72,6 +72,12 @@ class PracticePlainTextField extends StatelessWidget {
         border: const OutlineInputBorder(),
         enabledBorder: coloredBorder(),
         focusedBorder: coloredBorder(),
+        // A correct (or revealed) answer disables the field, at which
+        // point TextField stops honoring enabledBorder/focusedBorder and
+        // falls back to disabledBorder — without this, the field would
+        // silently lose its green/red border exactly when the result
+        // colors matter most.
+        disabledBorder: coloredBorder(),
       ),
       onChanged: onChanged,
       onSubmitted: onSubmitted,

@@ -723,6 +723,78 @@ class $UserWordProgressTableTable extends UserWordProgressTable
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _userMasteredMeta = const VerificationMeta(
+    'userMastered',
+  );
+  @override
+  late final GeneratedColumn<bool> userMastered = GeneratedColumn<bool>(
+    'user_mastered',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("user_mastered" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _masteredAtMeta = const VerificationMeta(
+    'masteredAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> masteredAt = GeneratedColumn<DateTime>(
+    'mastered_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lastMasteredReviewAtMeta =
+      const VerificationMeta('lastMasteredReviewAt');
+  @override
+  late final GeneratedColumn<DateTime> lastMasteredReviewAt =
+      GeneratedColumn<DateTime>(
+        'last_mastered_review_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _masteredReviewCountMeta =
+      const VerificationMeta('masteredReviewCount');
+  @override
+  late final GeneratedColumn<int> masteredReviewCount = GeneratedColumn<int>(
+    'mastered_review_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _masteredReviewSuccessCountMeta =
+      const VerificationMeta('masteredReviewSuccessCount');
+  @override
+  late final GeneratedColumn<int> masteredReviewSuccessCount =
+      GeneratedColumn<int>(
+        'mastered_review_success_count',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(0),
+      );
+  static const VerificationMeta _masteredReviewFailCountMeta =
+      const VerificationMeta('masteredReviewFailCount');
+  @override
+  late final GeneratedColumn<int> masteredReviewFailCount =
+      GeneratedColumn<int>(
+        'mastered_review_fail_count',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(0),
+      );
   @override
   List<GeneratedColumn> get $columns => [
     wordId,
@@ -737,6 +809,12 @@ class $UserWordProgressTableTable extends UserWordProgressTable
     createdAt,
     lastReviewedAt,
     nextReviewAt,
+    userMastered,
+    masteredAt,
+    lastMasteredReviewAt,
+    masteredReviewCount,
+    masteredReviewSuccessCount,
+    masteredReviewFailCount,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -849,6 +927,57 @@ class $UserWordProgressTableTable extends UserWordProgressTable
         ),
       );
     }
+    if (data.containsKey('user_mastered')) {
+      context.handle(
+        _userMasteredMeta,
+        userMastered.isAcceptableOrUnknown(
+          data['user_mastered']!,
+          _userMasteredMeta,
+        ),
+      );
+    }
+    if (data.containsKey('mastered_at')) {
+      context.handle(
+        _masteredAtMeta,
+        masteredAt.isAcceptableOrUnknown(data['mastered_at']!, _masteredAtMeta),
+      );
+    }
+    if (data.containsKey('last_mastered_review_at')) {
+      context.handle(
+        _lastMasteredReviewAtMeta,
+        lastMasteredReviewAt.isAcceptableOrUnknown(
+          data['last_mastered_review_at']!,
+          _lastMasteredReviewAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('mastered_review_count')) {
+      context.handle(
+        _masteredReviewCountMeta,
+        masteredReviewCount.isAcceptableOrUnknown(
+          data['mastered_review_count']!,
+          _masteredReviewCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('mastered_review_success_count')) {
+      context.handle(
+        _masteredReviewSuccessCountMeta,
+        masteredReviewSuccessCount.isAcceptableOrUnknown(
+          data['mastered_review_success_count']!,
+          _masteredReviewSuccessCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('mastered_review_fail_count')) {
+      context.handle(
+        _masteredReviewFailCountMeta,
+        masteredReviewFailCount.isAcceptableOrUnknown(
+          data['mastered_review_fail_count']!,
+          _masteredReviewFailCountMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -909,6 +1038,30 @@ class $UserWordProgressTableTable extends UserWordProgressTable
         DriftSqlType.dateTime,
         data['${effectivePrefix}next_review_at'],
       ),
+      userMastered: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}user_mastered'],
+      )!,
+      masteredAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}mastered_at'],
+      ),
+      lastMasteredReviewAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_mastered_review_at'],
+      ),
+      masteredReviewCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}mastered_review_count'],
+      )!,
+      masteredReviewSuccessCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}mastered_review_success_count'],
+      )!,
+      masteredReviewFailCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}mastered_review_fail_count'],
+      )!,
     );
   }
 
@@ -932,6 +1085,22 @@ class UserWordProgressTableData extends DataClass
   final DateTime createdAt;
   final DateTime? lastReviewedAt;
   final DateTime? nextReviewAt;
+
+  /// Whether the user has explicitly marked this word as mastered —
+  /// independent of [masteryLevel], which is computed automatically.
+  /// Pulls the word out of the normal practice pool and into "Mastered
+  /// Words" review.
+  final bool userMastered;
+  final DateTime? masteredAt;
+  final DateTime? lastMasteredReviewAt;
+
+  /// Lifetime counters for mastered-word review sessions. Deliberately
+  /// separate from [timesReviewed]/[timesCorrect]/[timesIncorrect] so
+  /// reviewing a mastered word never distorts normal-practice stats
+  /// (accuracy, streak, daily goal).
+  final int masteredReviewCount;
+  final int masteredReviewSuccessCount;
+  final int masteredReviewFailCount;
   const UserWordProgressTableData({
     required this.wordId,
     required this.timesReviewed,
@@ -945,6 +1114,12 @@ class UserWordProgressTableData extends DataClass
     required this.createdAt,
     this.lastReviewedAt,
     this.nextReviewAt,
+    required this.userMastered,
+    this.masteredAt,
+    this.lastMasteredReviewAt,
+    required this.masteredReviewCount,
+    required this.masteredReviewSuccessCount,
+    required this.masteredReviewFailCount,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -965,6 +1140,18 @@ class UserWordProgressTableData extends DataClass
     if (!nullToAbsent || nextReviewAt != null) {
       map['next_review_at'] = Variable<DateTime>(nextReviewAt);
     }
+    map['user_mastered'] = Variable<bool>(userMastered);
+    if (!nullToAbsent || masteredAt != null) {
+      map['mastered_at'] = Variable<DateTime>(masteredAt);
+    }
+    if (!nullToAbsent || lastMasteredReviewAt != null) {
+      map['last_mastered_review_at'] = Variable<DateTime>(lastMasteredReviewAt);
+    }
+    map['mastered_review_count'] = Variable<int>(masteredReviewCount);
+    map['mastered_review_success_count'] = Variable<int>(
+      masteredReviewSuccessCount,
+    );
+    map['mastered_review_fail_count'] = Variable<int>(masteredReviewFailCount);
     return map;
   }
 
@@ -986,6 +1173,16 @@ class UserWordProgressTableData extends DataClass
       nextReviewAt: nextReviewAt == null && nullToAbsent
           ? const Value.absent()
           : Value(nextReviewAt),
+      userMastered: Value(userMastered),
+      masteredAt: masteredAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(masteredAt),
+      lastMasteredReviewAt: lastMasteredReviewAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastMasteredReviewAt),
+      masteredReviewCount: Value(masteredReviewCount),
+      masteredReviewSuccessCount: Value(masteredReviewSuccessCount),
+      masteredReviewFailCount: Value(masteredReviewFailCount),
     );
   }
 
@@ -1009,6 +1206,20 @@ class UserWordProgressTableData extends DataClass
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       lastReviewedAt: serializer.fromJson<DateTime?>(json['lastReviewedAt']),
       nextReviewAt: serializer.fromJson<DateTime?>(json['nextReviewAt']),
+      userMastered: serializer.fromJson<bool>(json['userMastered']),
+      masteredAt: serializer.fromJson<DateTime?>(json['masteredAt']),
+      lastMasteredReviewAt: serializer.fromJson<DateTime?>(
+        json['lastMasteredReviewAt'],
+      ),
+      masteredReviewCount: serializer.fromJson<int>(
+        json['masteredReviewCount'],
+      ),
+      masteredReviewSuccessCount: serializer.fromJson<int>(
+        json['masteredReviewSuccessCount'],
+      ),
+      masteredReviewFailCount: serializer.fromJson<int>(
+        json['masteredReviewFailCount'],
+      ),
     );
   }
   @override
@@ -1027,6 +1238,18 @@ class UserWordProgressTableData extends DataClass
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'lastReviewedAt': serializer.toJson<DateTime?>(lastReviewedAt),
       'nextReviewAt': serializer.toJson<DateTime?>(nextReviewAt),
+      'userMastered': serializer.toJson<bool>(userMastered),
+      'masteredAt': serializer.toJson<DateTime?>(masteredAt),
+      'lastMasteredReviewAt': serializer.toJson<DateTime?>(
+        lastMasteredReviewAt,
+      ),
+      'masteredReviewCount': serializer.toJson<int>(masteredReviewCount),
+      'masteredReviewSuccessCount': serializer.toJson<int>(
+        masteredReviewSuccessCount,
+      ),
+      'masteredReviewFailCount': serializer.toJson<int>(
+        masteredReviewFailCount,
+      ),
     };
   }
 
@@ -1043,6 +1266,12 @@ class UserWordProgressTableData extends DataClass
     DateTime? createdAt,
     Value<DateTime?> lastReviewedAt = const Value.absent(),
     Value<DateTime?> nextReviewAt = const Value.absent(),
+    bool? userMastered,
+    Value<DateTime?> masteredAt = const Value.absent(),
+    Value<DateTime?> lastMasteredReviewAt = const Value.absent(),
+    int? masteredReviewCount,
+    int? masteredReviewSuccessCount,
+    int? masteredReviewFailCount,
   }) => UserWordProgressTableData(
     wordId: wordId ?? this.wordId,
     timesReviewed: timesReviewed ?? this.timesReviewed,
@@ -1058,6 +1287,16 @@ class UserWordProgressTableData extends DataClass
         ? lastReviewedAt.value
         : this.lastReviewedAt,
     nextReviewAt: nextReviewAt.present ? nextReviewAt.value : this.nextReviewAt,
+    userMastered: userMastered ?? this.userMastered,
+    masteredAt: masteredAt.present ? masteredAt.value : this.masteredAt,
+    lastMasteredReviewAt: lastMasteredReviewAt.present
+        ? lastMasteredReviewAt.value
+        : this.lastMasteredReviewAt,
+    masteredReviewCount: masteredReviewCount ?? this.masteredReviewCount,
+    masteredReviewSuccessCount:
+        masteredReviewSuccessCount ?? this.masteredReviewSuccessCount,
+    masteredReviewFailCount:
+        masteredReviewFailCount ?? this.masteredReviewFailCount,
   );
   UserWordProgressTableData copyWithCompanion(
     UserWordProgressTableCompanion data,
@@ -1093,6 +1332,24 @@ class UserWordProgressTableData extends DataClass
       nextReviewAt: data.nextReviewAt.present
           ? data.nextReviewAt.value
           : this.nextReviewAt,
+      userMastered: data.userMastered.present
+          ? data.userMastered.value
+          : this.userMastered,
+      masteredAt: data.masteredAt.present
+          ? data.masteredAt.value
+          : this.masteredAt,
+      lastMasteredReviewAt: data.lastMasteredReviewAt.present
+          ? data.lastMasteredReviewAt.value
+          : this.lastMasteredReviewAt,
+      masteredReviewCount: data.masteredReviewCount.present
+          ? data.masteredReviewCount.value
+          : this.masteredReviewCount,
+      masteredReviewSuccessCount: data.masteredReviewSuccessCount.present
+          ? data.masteredReviewSuccessCount.value
+          : this.masteredReviewSuccessCount,
+      masteredReviewFailCount: data.masteredReviewFailCount.present
+          ? data.masteredReviewFailCount.value
+          : this.masteredReviewFailCount,
     );
   }
 
@@ -1110,7 +1367,13 @@ class UserWordProgressTableData extends DataClass
           ..write('masteryLevel: $masteryLevel, ')
           ..write('createdAt: $createdAt, ')
           ..write('lastReviewedAt: $lastReviewedAt, ')
-          ..write('nextReviewAt: $nextReviewAt')
+          ..write('nextReviewAt: $nextReviewAt, ')
+          ..write('userMastered: $userMastered, ')
+          ..write('masteredAt: $masteredAt, ')
+          ..write('lastMasteredReviewAt: $lastMasteredReviewAt, ')
+          ..write('masteredReviewCount: $masteredReviewCount, ')
+          ..write('masteredReviewSuccessCount: $masteredReviewSuccessCount, ')
+          ..write('masteredReviewFailCount: $masteredReviewFailCount')
           ..write(')'))
         .toString();
   }
@@ -1129,6 +1392,12 @@ class UserWordProgressTableData extends DataClass
     createdAt,
     lastReviewedAt,
     nextReviewAt,
+    userMastered,
+    masteredAt,
+    lastMasteredReviewAt,
+    masteredReviewCount,
+    masteredReviewSuccessCount,
+    masteredReviewFailCount,
   );
   @override
   bool operator ==(Object other) =>
@@ -1145,7 +1414,13 @@ class UserWordProgressTableData extends DataClass
           other.masteryLevel == this.masteryLevel &&
           other.createdAt == this.createdAt &&
           other.lastReviewedAt == this.lastReviewedAt &&
-          other.nextReviewAt == this.nextReviewAt);
+          other.nextReviewAt == this.nextReviewAt &&
+          other.userMastered == this.userMastered &&
+          other.masteredAt == this.masteredAt &&
+          other.lastMasteredReviewAt == this.lastMasteredReviewAt &&
+          other.masteredReviewCount == this.masteredReviewCount &&
+          other.masteredReviewSuccessCount == this.masteredReviewSuccessCount &&
+          other.masteredReviewFailCount == this.masteredReviewFailCount);
 }
 
 class UserWordProgressTableCompanion
@@ -1162,6 +1437,12 @@ class UserWordProgressTableCompanion
   final Value<DateTime> createdAt;
   final Value<DateTime?> lastReviewedAt;
   final Value<DateTime?> nextReviewAt;
+  final Value<bool> userMastered;
+  final Value<DateTime?> masteredAt;
+  final Value<DateTime?> lastMasteredReviewAt;
+  final Value<int> masteredReviewCount;
+  final Value<int> masteredReviewSuccessCount;
+  final Value<int> masteredReviewFailCount;
   const UserWordProgressTableCompanion({
     this.wordId = const Value.absent(),
     this.timesReviewed = const Value.absent(),
@@ -1175,6 +1456,12 @@ class UserWordProgressTableCompanion
     this.createdAt = const Value.absent(),
     this.lastReviewedAt = const Value.absent(),
     this.nextReviewAt = const Value.absent(),
+    this.userMastered = const Value.absent(),
+    this.masteredAt = const Value.absent(),
+    this.lastMasteredReviewAt = const Value.absent(),
+    this.masteredReviewCount = const Value.absent(),
+    this.masteredReviewSuccessCount = const Value.absent(),
+    this.masteredReviewFailCount = const Value.absent(),
   });
   UserWordProgressTableCompanion.insert({
     this.wordId = const Value.absent(),
@@ -1189,6 +1476,12 @@ class UserWordProgressTableCompanion
     this.createdAt = const Value.absent(),
     this.lastReviewedAt = const Value.absent(),
     this.nextReviewAt = const Value.absent(),
+    this.userMastered = const Value.absent(),
+    this.masteredAt = const Value.absent(),
+    this.lastMasteredReviewAt = const Value.absent(),
+    this.masteredReviewCount = const Value.absent(),
+    this.masteredReviewSuccessCount = const Value.absent(),
+    this.masteredReviewFailCount = const Value.absent(),
   });
   static Insertable<UserWordProgressTableData> custom({
     Expression<int>? wordId,
@@ -1203,6 +1496,12 @@ class UserWordProgressTableCompanion
     Expression<DateTime>? createdAt,
     Expression<DateTime>? lastReviewedAt,
     Expression<DateTime>? nextReviewAt,
+    Expression<bool>? userMastered,
+    Expression<DateTime>? masteredAt,
+    Expression<DateTime>? lastMasteredReviewAt,
+    Expression<int>? masteredReviewCount,
+    Expression<int>? masteredReviewSuccessCount,
+    Expression<int>? masteredReviewFailCount,
   }) {
     return RawValuesInsertable({
       if (wordId != null) 'word_id': wordId,
@@ -1218,6 +1517,16 @@ class UserWordProgressTableCompanion
       if (createdAt != null) 'created_at': createdAt,
       if (lastReviewedAt != null) 'last_reviewed_at': lastReviewedAt,
       if (nextReviewAt != null) 'next_review_at': nextReviewAt,
+      if (userMastered != null) 'user_mastered': userMastered,
+      if (masteredAt != null) 'mastered_at': masteredAt,
+      if (lastMasteredReviewAt != null)
+        'last_mastered_review_at': lastMasteredReviewAt,
+      if (masteredReviewCount != null)
+        'mastered_review_count': masteredReviewCount,
+      if (masteredReviewSuccessCount != null)
+        'mastered_review_success_count': masteredReviewSuccessCount,
+      if (masteredReviewFailCount != null)
+        'mastered_review_fail_count': masteredReviewFailCount,
     });
   }
 
@@ -1234,6 +1543,12 @@ class UserWordProgressTableCompanion
     Value<DateTime>? createdAt,
     Value<DateTime?>? lastReviewedAt,
     Value<DateTime?>? nextReviewAt,
+    Value<bool>? userMastered,
+    Value<DateTime?>? masteredAt,
+    Value<DateTime?>? lastMasteredReviewAt,
+    Value<int>? masteredReviewCount,
+    Value<int>? masteredReviewSuccessCount,
+    Value<int>? masteredReviewFailCount,
   }) {
     return UserWordProgressTableCompanion(
       wordId: wordId ?? this.wordId,
@@ -1249,6 +1564,14 @@ class UserWordProgressTableCompanion
       createdAt: createdAt ?? this.createdAt,
       lastReviewedAt: lastReviewedAt ?? this.lastReviewedAt,
       nextReviewAt: nextReviewAt ?? this.nextReviewAt,
+      userMastered: userMastered ?? this.userMastered,
+      masteredAt: masteredAt ?? this.masteredAt,
+      lastMasteredReviewAt: lastMasteredReviewAt ?? this.lastMasteredReviewAt,
+      masteredReviewCount: masteredReviewCount ?? this.masteredReviewCount,
+      masteredReviewSuccessCount:
+          masteredReviewSuccessCount ?? this.masteredReviewSuccessCount,
+      masteredReviewFailCount:
+          masteredReviewFailCount ?? this.masteredReviewFailCount,
     );
   }
 
@@ -1293,6 +1616,30 @@ class UserWordProgressTableCompanion
     if (nextReviewAt.present) {
       map['next_review_at'] = Variable<DateTime>(nextReviewAt.value);
     }
+    if (userMastered.present) {
+      map['user_mastered'] = Variable<bool>(userMastered.value);
+    }
+    if (masteredAt.present) {
+      map['mastered_at'] = Variable<DateTime>(masteredAt.value);
+    }
+    if (lastMasteredReviewAt.present) {
+      map['last_mastered_review_at'] = Variable<DateTime>(
+        lastMasteredReviewAt.value,
+      );
+    }
+    if (masteredReviewCount.present) {
+      map['mastered_review_count'] = Variable<int>(masteredReviewCount.value);
+    }
+    if (masteredReviewSuccessCount.present) {
+      map['mastered_review_success_count'] = Variable<int>(
+        masteredReviewSuccessCount.value,
+      );
+    }
+    if (masteredReviewFailCount.present) {
+      map['mastered_review_fail_count'] = Variable<int>(
+        masteredReviewFailCount.value,
+      );
+    }
     return map;
   }
 
@@ -1310,7 +1657,13 @@ class UserWordProgressTableCompanion
           ..write('masteryLevel: $masteryLevel, ')
           ..write('createdAt: $createdAt, ')
           ..write('lastReviewedAt: $lastReviewedAt, ')
-          ..write('nextReviewAt: $nextReviewAt')
+          ..write('nextReviewAt: $nextReviewAt, ')
+          ..write('userMastered: $userMastered, ')
+          ..write('masteredAt: $masteredAt, ')
+          ..write('lastMasteredReviewAt: $lastMasteredReviewAt, ')
+          ..write('masteredReviewCount: $masteredReviewCount, ')
+          ..write('masteredReviewSuccessCount: $masteredReviewSuccessCount, ')
+          ..write('masteredReviewFailCount: $masteredReviewFailCount')
           ..write(')'))
         .toString();
   }
@@ -1747,6 +2100,12 @@ typedef $$UserWordProgressTableTableCreateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime?> lastReviewedAt,
       Value<DateTime?> nextReviewAt,
+      Value<bool> userMastered,
+      Value<DateTime?> masteredAt,
+      Value<DateTime?> lastMasteredReviewAt,
+      Value<int> masteredReviewCount,
+      Value<int> masteredReviewSuccessCount,
+      Value<int> masteredReviewFailCount,
     });
 typedef $$UserWordProgressTableTableUpdateCompanionBuilder =
     UserWordProgressTableCompanion Function({
@@ -1762,6 +2121,12 @@ typedef $$UserWordProgressTableTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime?> lastReviewedAt,
       Value<DateTime?> nextReviewAt,
+      Value<bool> userMastered,
+      Value<DateTime?> masteredAt,
+      Value<DateTime?> lastMasteredReviewAt,
+      Value<int> masteredReviewCount,
+      Value<int> masteredReviewSuccessCount,
+      Value<int> masteredReviewFailCount,
     });
 
 final class $$UserWordProgressTableTableReferences
@@ -1860,6 +2225,36 @@ class $$UserWordProgressTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<bool> get userMastered => $composableBuilder(
+    column: $table.userMastered,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get masteredAt => $composableBuilder(
+    column: $table.masteredAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastMasteredReviewAt => $composableBuilder(
+    column: $table.lastMasteredReviewAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get masteredReviewCount => $composableBuilder(
+    column: $table.masteredReviewCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get masteredReviewSuccessCount => $composableBuilder(
+    column: $table.masteredReviewSuccessCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get masteredReviewFailCount => $composableBuilder(
+    column: $table.masteredReviewFailCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$WordsTableFilterComposer get wordId {
     final $$WordsTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -1948,6 +2343,36 @@ class $$UserWordProgressTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get userMastered => $composableBuilder(
+    column: $table.userMastered,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get masteredAt => $composableBuilder(
+    column: $table.masteredAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastMasteredReviewAt => $composableBuilder(
+    column: $table.lastMasteredReviewAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get masteredReviewCount => $composableBuilder(
+    column: $table.masteredReviewCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get masteredReviewSuccessCount => $composableBuilder(
+    column: $table.masteredReviewSuccessCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get masteredReviewFailCount => $composableBuilder(
+    column: $table.masteredReviewFailCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$WordsTableOrderingComposer get wordId {
     final $$WordsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -2032,6 +2457,36 @@ class $$UserWordProgressTableTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<bool> get userMastered => $composableBuilder(
+    column: $table.userMastered,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get masteredAt => $composableBuilder(
+    column: $table.masteredAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastMasteredReviewAt => $composableBuilder(
+    column: $table.lastMasteredReviewAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get masteredReviewCount => $composableBuilder(
+    column: $table.masteredReviewCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get masteredReviewSuccessCount => $composableBuilder(
+    column: $table.masteredReviewSuccessCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get masteredReviewFailCount => $composableBuilder(
+    column: $table.masteredReviewFailCount,
+    builder: (column) => column,
+  );
+
   $$WordsTableAnnotationComposer get wordId {
     final $$WordsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -2107,6 +2562,12 @@ class $$UserWordProgressTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> lastReviewedAt = const Value.absent(),
                 Value<DateTime?> nextReviewAt = const Value.absent(),
+                Value<bool> userMastered = const Value.absent(),
+                Value<DateTime?> masteredAt = const Value.absent(),
+                Value<DateTime?> lastMasteredReviewAt = const Value.absent(),
+                Value<int> masteredReviewCount = const Value.absent(),
+                Value<int> masteredReviewSuccessCount = const Value.absent(),
+                Value<int> masteredReviewFailCount = const Value.absent(),
               }) => UserWordProgressTableCompanion(
                 wordId: wordId,
                 timesReviewed: timesReviewed,
@@ -2120,6 +2581,12 @@ class $$UserWordProgressTableTableTableManager
                 createdAt: createdAt,
                 lastReviewedAt: lastReviewedAt,
                 nextReviewAt: nextReviewAt,
+                userMastered: userMastered,
+                masteredAt: masteredAt,
+                lastMasteredReviewAt: lastMasteredReviewAt,
+                masteredReviewCount: masteredReviewCount,
+                masteredReviewSuccessCount: masteredReviewSuccessCount,
+                masteredReviewFailCount: masteredReviewFailCount,
               ),
           createCompanionCallback:
               ({
@@ -2135,6 +2602,12 @@ class $$UserWordProgressTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> lastReviewedAt = const Value.absent(),
                 Value<DateTime?> nextReviewAt = const Value.absent(),
+                Value<bool> userMastered = const Value.absent(),
+                Value<DateTime?> masteredAt = const Value.absent(),
+                Value<DateTime?> lastMasteredReviewAt = const Value.absent(),
+                Value<int> masteredReviewCount = const Value.absent(),
+                Value<int> masteredReviewSuccessCount = const Value.absent(),
+                Value<int> masteredReviewFailCount = const Value.absent(),
               }) => UserWordProgressTableCompanion.insert(
                 wordId: wordId,
                 timesReviewed: timesReviewed,
@@ -2148,6 +2621,12 @@ class $$UserWordProgressTableTableTableManager
                 createdAt: createdAt,
                 lastReviewedAt: lastReviewedAt,
                 nextReviewAt: nextReviewAt,
+                userMastered: userMastered,
+                masteredAt: masteredAt,
+                lastMasteredReviewAt: lastMasteredReviewAt,
+                masteredReviewCount: masteredReviewCount,
+                masteredReviewSuccessCount: masteredReviewSuccessCount,
+                masteredReviewFailCount: masteredReviewFailCount,
               ),
           withReferenceMapper: (p0) => p0
               .map(

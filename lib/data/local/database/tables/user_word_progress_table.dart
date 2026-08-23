@@ -23,6 +23,25 @@ class UserWordProgressTable extends Table {
   DateTimeColumn get lastReviewedAt => dateTime().nullable()();
   DateTimeColumn get nextReviewAt => dateTime().nullable()();
 
+  /// Whether the user has explicitly marked this word as mastered —
+  /// independent of [masteryLevel], which is computed automatically.
+  /// Pulls the word out of the normal practice pool and into "Mastered
+  /// Words" review.
+  BoolColumn get userMastered => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get masteredAt => dateTime().nullable()();
+  DateTimeColumn get lastMasteredReviewAt => dateTime().nullable()();
+
+  /// Lifetime counters for mastered-word review sessions. Deliberately
+  /// separate from [timesReviewed]/[timesCorrect]/[timesIncorrect] so
+  /// reviewing a mastered word never distorts normal-practice stats
+  /// (accuracy, streak, daily goal).
+  IntColumn get masteredReviewCount =>
+      integer().withDefault(const Constant(0))();
+  IntColumn get masteredReviewSuccessCount =>
+      integer().withDefault(const Constant(0))();
+  IntColumn get masteredReviewFailCount =>
+      integer().withDefault(const Constant(0))();
+
   @override
   Set<Column> get primaryKey => {wordId};
 }

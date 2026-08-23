@@ -29,6 +29,12 @@ mixin _$UserWordProgress {
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime? get lastReviewedAt => throw _privateConstructorUsedError;
   DateTime? get nextReviewAt => throw _privateConstructorUsedError;
+  bool get userMastered => throw _privateConstructorUsedError;
+  DateTime? get masteredAt => throw _privateConstructorUsedError;
+  DateTime? get lastMasteredReviewAt => throw _privateConstructorUsedError;
+  int get masteredReviewCount => throw _privateConstructorUsedError;
+  int get masteredReviewSuccessCount => throw _privateConstructorUsedError;
+  int get masteredReviewFailCount => throw _privateConstructorUsedError;
 
   /// Create a copy of UserWordProgress
   /// with the given fields replaced by the non-null parameter values.
@@ -57,6 +63,12 @@ abstract class $UserWordProgressCopyWith<$Res> {
     DateTime createdAt,
     DateTime? lastReviewedAt,
     DateTime? nextReviewAt,
+    bool userMastered,
+    DateTime? masteredAt,
+    DateTime? lastMasteredReviewAt,
+    int masteredReviewCount,
+    int masteredReviewSuccessCount,
+    int masteredReviewFailCount,
   });
 }
 
@@ -87,6 +99,12 @@ class _$UserWordProgressCopyWithImpl<$Res, $Val extends UserWordProgress>
     Object? createdAt = null,
     Object? lastReviewedAt = freezed,
     Object? nextReviewAt = freezed,
+    Object? userMastered = null,
+    Object? masteredAt = freezed,
+    Object? lastMasteredReviewAt = freezed,
+    Object? masteredReviewCount = null,
+    Object? masteredReviewSuccessCount = null,
+    Object? masteredReviewFailCount = null,
   }) {
     return _then(
       _value.copyWith(
@@ -138,6 +156,30 @@ class _$UserWordProgressCopyWithImpl<$Res, $Val extends UserWordProgress>
                 ? _value.nextReviewAt
                 : nextReviewAt // ignore: cast_nullable_to_non_nullable
                       as DateTime?,
+            userMastered: null == userMastered
+                ? _value.userMastered
+                : userMastered // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            masteredAt: freezed == masteredAt
+                ? _value.masteredAt
+                : masteredAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            lastMasteredReviewAt: freezed == lastMasteredReviewAt
+                ? _value.lastMasteredReviewAt
+                : lastMasteredReviewAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            masteredReviewCount: null == masteredReviewCount
+                ? _value.masteredReviewCount
+                : masteredReviewCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            masteredReviewSuccessCount: null == masteredReviewSuccessCount
+                ? _value.masteredReviewSuccessCount
+                : masteredReviewSuccessCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            masteredReviewFailCount: null == masteredReviewFailCount
+                ? _value.masteredReviewFailCount
+                : masteredReviewFailCount // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -166,6 +208,12 @@ abstract class _$$UserWordProgressImplCopyWith<$Res>
     DateTime createdAt,
     DateTime? lastReviewedAt,
     DateTime? nextReviewAt,
+    bool userMastered,
+    DateTime? masteredAt,
+    DateTime? lastMasteredReviewAt,
+    int masteredReviewCount,
+    int masteredReviewSuccessCount,
+    int masteredReviewFailCount,
   });
 }
 
@@ -195,6 +243,12 @@ class __$$UserWordProgressImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? lastReviewedAt = freezed,
     Object? nextReviewAt = freezed,
+    Object? userMastered = null,
+    Object? masteredAt = freezed,
+    Object? lastMasteredReviewAt = freezed,
+    Object? masteredReviewCount = null,
+    Object? masteredReviewSuccessCount = null,
+    Object? masteredReviewFailCount = null,
   }) {
     return _then(
       _$UserWordProgressImpl(
@@ -246,6 +300,30 @@ class __$$UserWordProgressImplCopyWithImpl<$Res>
             ? _value.nextReviewAt
             : nextReviewAt // ignore: cast_nullable_to_non_nullable
                   as DateTime?,
+        userMastered: null == userMastered
+            ? _value.userMastered
+            : userMastered // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        masteredAt: freezed == masteredAt
+            ? _value.masteredAt
+            : masteredAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        lastMasteredReviewAt: freezed == lastMasteredReviewAt
+            ? _value.lastMasteredReviewAt
+            : lastMasteredReviewAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        masteredReviewCount: null == masteredReviewCount
+            ? _value.masteredReviewCount
+            : masteredReviewCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        masteredReviewSuccessCount: null == masteredReviewSuccessCount
+            ? _value.masteredReviewSuccessCount
+            : masteredReviewSuccessCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        masteredReviewFailCount: null == masteredReviewFailCount
+            ? _value.masteredReviewFailCount
+            : masteredReviewFailCount // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -267,6 +345,12 @@ class _$UserWordProgressImpl extends _UserWordProgress {
     required this.createdAt,
     this.lastReviewedAt,
     this.nextReviewAt,
+    this.userMastered = false,
+    this.masteredAt,
+    this.lastMasteredReviewAt,
+    this.masteredReviewCount = 0,
+    this.masteredReviewSuccessCount = 0,
+    this.masteredReviewFailCount = 0,
   }) : super._();
 
   @override
@@ -293,10 +377,26 @@ class _$UserWordProgressImpl extends _UserWordProgress {
   final DateTime? lastReviewedAt;
   @override
   final DateTime? nextReviewAt;
+  @override
+  @JsonKey()
+  final bool userMastered;
+  @override
+  final DateTime? masteredAt;
+  @override
+  final DateTime? lastMasteredReviewAt;
+  @override
+  @JsonKey()
+  final int masteredReviewCount;
+  @override
+  @JsonKey()
+  final int masteredReviewSuccessCount;
+  @override
+  @JsonKey()
+  final int masteredReviewFailCount;
 
   @override
   String toString() {
-    return 'UserWordProgress(wordId: $wordId, timesReviewed: $timesReviewed, timesCorrect: $timesCorrect, timesIncorrect: $timesIncorrect, firstAttemptSuccesses: $firstAttemptSuccesses, revealCount: $revealCount, hintCount: $hintCount, masteryScore: $masteryScore, masteryLevel: $masteryLevel, createdAt: $createdAt, lastReviewedAt: $lastReviewedAt, nextReviewAt: $nextReviewAt)';
+    return 'UserWordProgress(wordId: $wordId, timesReviewed: $timesReviewed, timesCorrect: $timesCorrect, timesIncorrect: $timesIncorrect, firstAttemptSuccesses: $firstAttemptSuccesses, revealCount: $revealCount, hintCount: $hintCount, masteryScore: $masteryScore, masteryLevel: $masteryLevel, createdAt: $createdAt, lastReviewedAt: $lastReviewedAt, nextReviewAt: $nextReviewAt, userMastered: $userMastered, masteredAt: $masteredAt, lastMasteredReviewAt: $lastMasteredReviewAt, masteredReviewCount: $masteredReviewCount, masteredReviewSuccessCount: $masteredReviewSuccessCount, masteredReviewFailCount: $masteredReviewFailCount)';
   }
 
   @override
@@ -326,7 +426,26 @@ class _$UserWordProgressImpl extends _UserWordProgress {
             (identical(other.lastReviewedAt, lastReviewedAt) ||
                 other.lastReviewedAt == lastReviewedAt) &&
             (identical(other.nextReviewAt, nextReviewAt) ||
-                other.nextReviewAt == nextReviewAt));
+                other.nextReviewAt == nextReviewAt) &&
+            (identical(other.userMastered, userMastered) ||
+                other.userMastered == userMastered) &&
+            (identical(other.masteredAt, masteredAt) ||
+                other.masteredAt == masteredAt) &&
+            (identical(other.lastMasteredReviewAt, lastMasteredReviewAt) ||
+                other.lastMasteredReviewAt == lastMasteredReviewAt) &&
+            (identical(other.masteredReviewCount, masteredReviewCount) ||
+                other.masteredReviewCount == masteredReviewCount) &&
+            (identical(
+                  other.masteredReviewSuccessCount,
+                  masteredReviewSuccessCount,
+                ) ||
+                other.masteredReviewSuccessCount ==
+                    masteredReviewSuccessCount) &&
+            (identical(
+                  other.masteredReviewFailCount,
+                  masteredReviewFailCount,
+                ) ||
+                other.masteredReviewFailCount == masteredReviewFailCount));
   }
 
   @override
@@ -344,6 +463,12 @@ class _$UserWordProgressImpl extends _UserWordProgress {
     createdAt,
     lastReviewedAt,
     nextReviewAt,
+    userMastered,
+    masteredAt,
+    lastMasteredReviewAt,
+    masteredReviewCount,
+    masteredReviewSuccessCount,
+    masteredReviewFailCount,
   );
 
   /// Create a copy of UserWordProgress
@@ -372,6 +497,12 @@ abstract class _UserWordProgress extends UserWordProgress {
     required final DateTime createdAt,
     final DateTime? lastReviewedAt,
     final DateTime? nextReviewAt,
+    final bool userMastered,
+    final DateTime? masteredAt,
+    final DateTime? lastMasteredReviewAt,
+    final int masteredReviewCount,
+    final int masteredReviewSuccessCount,
+    final int masteredReviewFailCount,
   }) = _$UserWordProgressImpl;
   const _UserWordProgress._() : super._();
 
@@ -399,6 +530,18 @@ abstract class _UserWordProgress extends UserWordProgress {
   DateTime? get lastReviewedAt;
   @override
   DateTime? get nextReviewAt;
+  @override
+  bool get userMastered;
+  @override
+  DateTime? get masteredAt;
+  @override
+  DateTime? get lastMasteredReviewAt;
+  @override
+  int get masteredReviewCount;
+  @override
+  int get masteredReviewSuccessCount;
+  @override
+  int get masteredReviewFailCount;
 
   /// Create a copy of UserWordProgress
   /// with the given fields replaced by the non-null parameter values.

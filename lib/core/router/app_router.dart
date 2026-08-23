@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/answer_field_selector/presentation/answer_field_selector_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
+import '../../features/mastered_review/presentation/mastered_review_screen.dart';
+import '../../features/mastered_words/presentation/mastered_words_screen.dart';
 import '../../features/practice/presentation/practice_screen.dart';
 import '../../features/pronunciation_selector/presentation/pronunciation_selector_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
@@ -29,6 +31,8 @@ abstract final class AppRoutes {
   static const pronunciationSelector = '/settings/pronunciation';
   static const soundEffectsSettings = '/settings/sound-effects';
   static const answerFieldStyle = '/settings/answer-field';
+  static const masteredWords = '/mastered';
+  static const masteredReview = '/mastered/review';
 
   static String wordDetailPath(int id) => '/words/$id';
 }
@@ -126,6 +130,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           state: state,
           child: const AnswerFieldSelectorScreen(),
         ),
+      ),
+      GoRoute(
+        path: AppRoutes.masteredWords,
+        name: 'masteredWords',
+        pageBuilder: (context, state) =>
+            buildAppPage(state: state, child: const MasteredWordsScreen()),
+      ),
+      GoRoute(
+        path: AppRoutes.masteredReview,
+        name: 'masteredReview',
+        pageBuilder: (context, state) =>
+            buildAppPage(state: state, child: const MasteredReviewScreen()),
       ),
     ],
   );
