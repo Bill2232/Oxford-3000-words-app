@@ -33,9 +33,27 @@ enum TtsAccent {
 /// or any other platform failure is swallowed here rather than thrown, so
 /// a broken "Play" button never blocks the rest of the practice flow —
 /// the user can still type and check their answer without ever hearing it.
+/// `flutter_tts` documents `setSpeechRate` as a single 0.0 (slowest)–1.0
+/// (fastest) scale meant to be consistent across platforms, with ~0.5
+/// meaning "normal" speed — and its Android and Windows implementations
+/// actually convert that into their native engine's own scale to make
+/// that true (Android literally multiplies by 2 before calling the native
+/// API, since Android's "normal" is 1.0, not 0.5; Windows maps it onto
+/// SAPI's -10..10 range centered on 0.5). Its **web** implementation does
+/// not — it assigns the raw value straight to
+/// `SpeechSynthesisUtterance.rate`, where the Web Speech API spec also
+/// treats 1.0 as "normal". Left uncorrected, our chosen rate plays back at
+/// under half speed on web, which is slow enough to badly distort the
+/// voice (drawn-out, slurred vowels — not just "slow"). Apply the same
+/// "0.5 == normal" doubling web is missing, matching what Android already
+/// does internally, so the *effective* rate is consistent across every
+/// platform instead of only web sounding broken.
+const _baseSpeechRate = 0.45;
+final _platformSpeechRate = kIsWeb ? (_baseSpeechRate * 2).clamp(0.1, 10.0) : _baseSpeechRate;
+
 class TtsService {
   TtsService() : _tts = FlutterTts() {
-    _tts.setSpeechRate(0.45);
+    _tts.setSpeechRate(_platformSpeechRate);
     _tts.setPitch(1.0);
     unawaited(setAccent(TtsAccent.american));
   }
